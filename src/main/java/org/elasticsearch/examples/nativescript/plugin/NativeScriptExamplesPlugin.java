@@ -1,5 +1,6 @@
 package org.elasticsearch.examples.nativescript.plugin;
 
+import org.elasticsearch.examples.nativescript.script.ArrayHelperScript;
 import org.elasticsearch.examples.nativescript.script.IsPrimeSearchScript;
 import org.elasticsearch.examples.nativescript.script.LanguageModelScoreScript;
 import org.elasticsearch.examples.nativescript.script.LookupScript;
@@ -50,5 +51,9 @@ public class NativeScriptExamplesPlugin extends AbstractPlugin {
         module.registerScript(CosineSimilarityScoreScript.SCRIPT_NAME, CosineSimilarityScoreScript.Factory.class);
         module.registerScript(PhraseScoreScript.SCRIPT_NAME, PhraseScoreScript.Factory.class);
         module.registerScript(LanguageModelScoreScript.SCRIPT_NAME, LanguageModelScoreScript.Factory.class);
+        module.registerScript("array", ArrayHelperScript.Factory.class);
+        module.registerScript("array.set", ArrayHelperScript.FactorySet.class);
+        module.registerScript("array.append", ArrayHelperScript.FactoryAppend.class);
+        module.registerScript("array.remove", ArrayHelperScript.FactoryRemove.class);
     }
 }

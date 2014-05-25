@@ -47,7 +47,7 @@ public class NativeScriptExamplesPlugin extends AbstractPlugin {
     }
 }
 
-p. 
+p.
 
 * Create @es-plugin.properties@ file in the @src/main/resources@ directory to point to the Plugin class that was created in the previous step:
 
@@ -77,10 +77,35 @@ p. In general native scripts have to implement the interface "ExecutableScript":
 
 h3. Lookup Script
 
-p. The "lookup script":https://github.com/imotov/elasticsearch-native-script-example/blob/master/src/main/java/org/elasticsearch/examples/nativescript/script/LookupScript.java demonstrates how to make elsticsearch client available within the native script. When script factory is initially created, the node is not fully initialized yet. Because of this client cannot be directory injected into the factory. Instead, the reference to the node is injected and the client is obtained from the node during script creation. A same mechanism can be used to obtain other node components through node injector. 
+p. The "lookup script":https://github.com/imotov/elasticsearch-native-script-example/blob/master/src/main/java/org/elasticsearch/examples/nativescript/script/LookupScript.java demonstrates how to make elsticsearch client available within the native script. When script factory is initially created, the node is not fully initialized yet. Because of this client cannot be directory injected into the factory. Instead, the reference to the node is injected and the client is obtained from the node during script creation. A same mechanism can be used to obtain other node components through node injector.
 
 h3. Random Sort Script
 
 p. The "random sort script":https://github.com/imotov/elasticsearch-native-script-example/blob/master/src/main/java/org/elasticsearch/examples/nativescript/script/RandomSortScriptFactory.java demonstrates a slightly different approach to script/factory packaging. In this case the factory is the outer class which creates one inner script or another based on the input parameters. If the parameter @salt@ is present, the script is calculating hash value of @id + salt@ instead of generation random sort values. As a result, for any value of @salt@ the order of the records will appear random, but this order will be repeatable and therefore this approach would be more suitable for paging through result list than a completely random approach.
 
+h4. Array Helpers Script
+
+p. The "array helper script":https://github.com/imotov/elasticsearch-native-script-example/blob/master/src/main/java/org/elasticsearch/examples/nativescript/script/ArrayHelperScript.java is meant to update an array of values in a document.
+
+bc.. curl -XPOST http://localhost:9200/test/type/1/_update -d { \
+  "script": "array.set", \
+  "lang": "native", \
+  "params": { \
+    "source": "tags", \
+    "values": [ \
+      "elasticsearch", \
+      "wow", \
+      "lah" \
+    ] \
+  } \
+}
+
+p. "array.set" will set one or more values. A value is appended if it was not already found in the array.
+The document's property manipulated is named with the parameter "source".
+
+p. "array.append" is identical to "array.set" except that it does not check for the unicity.
+
+p. "array.remove" will remove one or more values.
+
+p. Each script can either use the parameter "values" to define a list of values or the parameter "value" for a single one.
 
