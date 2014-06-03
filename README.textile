@@ -83,7 +83,7 @@ h3. Random Sort Script
 
 p. The "random sort script":https://github.com/imotov/elasticsearch-native-script-example/blob/master/src/main/java/org/elasticsearch/examples/nativescript/script/RandomSortScriptFactory.java demonstrates a slightly different approach to script/factory packaging. In this case the factory is the outer class which creates one inner script or another based on the input parameters. If the parameter @salt@ is present, the script is calculating hash value of @id + salt@ instead of generation random sort values. As a result, for any value of @salt@ the order of the records will appear random, but this order will be repeatable and therefore this approach would be more suitable for paging through result list than a completely random approach.
 
-h4. Array Helpers Script
+h4. Array and Hash Helpers Script
 
 p. The "array helper script":https://github.com/hmalphettes/elasticsearch-native-script-example/blob/array-helper/src/main/java/org/elasticsearch/examples/nativescript/script/ArrayHelperScript.java is meant to update an array of values in a document.
 
@@ -108,4 +108,20 @@ p. "array.append" is identical to "array.set" except that it does not check for 
 p. "array.remove" will remove one or more values.
 
 p. Each script can either use the parameter "values" to define a list of values or the parameter "value" for a single one.
+
+p. The "hash helper script" removes one or more fields from an object.
+
+bc.. curl -XPOST http://localhost:9200/test/type/1/_update -d { \
+  "script": "hash.remove", \
+  "lang": "native", \
+  "params": { \
+    "source": "person", \
+    "keys": [ \
+      "first", \
+      "last" \
+    ] \
+  } \
+}
+
+p. TODO: support dotted keys and source values to navigate the nested documents
 
