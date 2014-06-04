@@ -81,16 +81,16 @@ public class ArrayHelperScript extends AbstractSearchScript {
         }	
 	}
 	
-	private static final int ACTION_SET = 1;
-	private static final int ACTION_APPEND = 2;
-	private static final int ACTION_REMOVE = 3;
+	protected static final int ACTION_SET = 1;
+	protected static final int ACTION_APPEND = 2;
+	protected static final int ACTION_REMOVE = 3;
 	
-	private int action;
-	private String fieldName;
-	private String sourceName;
-	private Iterable<?> values;
-
-	private Map<String, Object> ctx;
+	protected int action;
+	protected String fieldName;
+	protected String sourceName;
+	protected Iterable<?> values;
+	
+	protected Map<String, Object> ctx;
 
 	private static final int getAction(String act) {
 		if (act == null || act.equals("set")) {
@@ -106,16 +106,22 @@ public class ArrayHelperScript extends AbstractSearchScript {
 	public ArrayHelperScript(Map<String, Object> params) {
 		this(params, getAction((String)params.get("action")));
 	}
+
 	public ArrayHelperScript(Map<String, Object> params, int act) {
+		this(params, act, "value");
+	}	
+	
+	public ArrayHelperScript(Map<String, Object> params, int act, String valueParameterName) {
 		action = act;
 		sourceName = (String) params.get("source");
 		fieldName = (String) params.get("field");
-		Object value = params.get("value");
+
+		Object value = params.get(valueParameterName);
 		if (value != null) {
 			values = new ArrayList<Object>(1);
 			((ArrayList<Object>)values).add(value);
 		} else {
-			Object vals = params.get("values");
+			Object vals = params.get(valueParameterName+"s");
 			if (vals instanceof Iterable<?>) {
 				values = (Iterable<?>) vals;
 			} else {

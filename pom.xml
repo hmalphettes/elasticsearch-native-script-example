@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.elasticsearch</groupId>
     <artifactId>elasticsearch-native-script-example</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>ElasticSearch Plugin with Native Script Examples</description>
     <inceptionYear>2013</inceptionYear>
@@ -38,7 +38,7 @@
     <!-- The Elasticsearch version that the project will be built with -->
     <!-- ============================================================= -->
     <properties>
-        <elasticsearch.version>1.2.0</elasticsearch.version>
+        <elasticsearch.version>1.2.1</elasticsearch.version>
         <lucene.version>4.8.1</lucene.version>
     </properties>
 
