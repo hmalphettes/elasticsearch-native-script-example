@@ -244,7 +244,7 @@ public class UpdaterScript  extends AbstractSearchScript {
     }
 
     protected Map<String,Object> selectParent(String path, boolean lazyBuild) {
-    	return selectParent(source, path.split("."), 0, lazyBuild);
+    	return selectParent(source, path.split("\\."), 0, lazyBuild);
     }
 
     /**
@@ -279,9 +279,10 @@ public class UpdaterScript  extends AbstractSearchScript {
     
     protected static Map<String,Object> selectParent(Map<String,Object> current,
     		String[] path, int segment, boolean lazyBuild) {
-    	if (path.length == 0) {
+    	if (segment == path.length - 1) {
     		return current;
     	}
+
     	String next = path[segment];
     	segment++;
     	Object property = current.get(next);
@@ -297,9 +298,6 @@ public class UpdaterScript  extends AbstractSearchScript {
 			property = new HashMap<String,Object>();
 			current.put(next, property);
     	}
-		if (segment == path.length - 1) {
-			return (Map<String,Object>)property;
-		}
 		return selectParent((Map<String,Object>)property, path, segment, lazyBuild);
     }
 

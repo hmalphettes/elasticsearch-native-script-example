@@ -42,6 +42,13 @@ public class UpdaterScriptTests extends AbstractSearchScriptTests {
 				.startObject("properties")
 					.startObject("name").field("type", "string").endObject()
 					.startObject("tags").field("type", "string").endObject()
+					.startObject("address").field("type", "object")
+						.startObject("properties")
+							.startObject("city").field("type", "string").endObject()
+							.startObject("street").field("type", "string").endObject()
+							.startObject("number").field("type", "integer").endObject()
+						.endObject()
+					.endObject()
 				.endObject()
 			.endObject()
 		.endObject().string();
@@ -196,6 +203,33 @@ public class UpdaterScriptTests extends AbstractSearchScriptTests {
 
 		Map<String, Object> res = updateAndGetResponse("set", params);
 		assertEquals("First article", res.get("name"));
+	}
+	
+	@Test
+	public void testRemoveItemsLeafNested() throws Exception {
+		XContentBuilder source = XContentFactory.jsonBuilder()
+		.startObject()
+			.field("name", "rec1")
+			.field("tags", new String[] {"elasticsearch", "wow"})
+			.startObject("address")
+				.field("city", "Paris")
+				.field("country", new String[] { "England", "France" })
+				.field("number", 3)
+			.endObject()
+		.endObject();
+		prepareTest(source);
+
+		Map<String, Object> setParams = new HashMap<String, Object>();
+		List<String> vals = new ArrayList<String>();
+		vals.add("England");
+		setParams.put("address.country", vals);
+
+		// Retrieve record and check
+		Map<String, Object> res = updateAndGetResponse("removeItems", setParams);
+
+		List<Object> countries = (ArrayList<Object>) ((Map<?,?>) res.get("address")).get("country");
+		System.err.println("countries " + countries);
+		assertTrue(countries.size() == 1);
 	}
 
 	/** "script": "updater", "lang": "native",
