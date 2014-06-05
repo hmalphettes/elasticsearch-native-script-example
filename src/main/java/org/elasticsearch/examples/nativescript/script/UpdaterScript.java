@@ -90,20 +90,26 @@ public class UpdaterScript  extends AbstractSearchScript {
 	}
 	
 	protected Map<String,Object> source;
+	protected Map<String, Object> ctx;
+	private Map<String, Object> params;
 	
 	public UpdaterScript(@Nullable Map<String, Object> params) {
-		
+		this.params = params;
 	}
 
 	@Override
 	public Object run() {
+		if (!execActions(params)) {
+			ctx.put("op", "none");
+		}
 		return null;
 	}
 	
     @Override
     public void setNextVar(String name, Object value) {
         if(name.equals("ctx")) {
-        	source = (Map<String, Object>) ((Map<String, Object>) value).get("_source");
+        	ctx = (Map<String, Object>) value;
+        	source = (Map<String, Object>) ctx.get("_source");
         }
     }
     
@@ -271,6 +277,9 @@ public class UpdaterScript  extends AbstractSearchScript {
     
     protected static Map<String,Object> selectParent(Map<String,Object> current,
     		String[] path, int segment, boolean lazyBuild) {
+    	if (path.length == 0) {
+    		return current;
+    	}
     	String next = path[segment];
     	segment++;
     	Object property = current.get(next);
