@@ -85,6 +85,8 @@ p. The "random sort script":https://github.com/imotov/elasticsearch-native-scrip
 
 h4. Array and Hash Helpers Script
 
+p. These scripts are alternative to mvel scripts to update documents. They dont require dynamic scripting to be enabled.
+
 p. The "array helper script":https://github.com/hmalphettes/elasticsearch-native-script-example/blob/array-helper/src/main/java/org/elasticsearch/examples/nativescript/script/ArrayHelperScript.java is meant to update an array of values in a document.
 
 bc.. curl -XPOST http://localhost:9200/test/type/1/_update -d { \

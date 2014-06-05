@@ -15,7 +15,7 @@ import org.junit.Test;
 /**
  */
 @ClusterScope(scope= Scope.SUITE, numDataNodes =1)
-public class ArrayHelperScriptTests extends AbstractSearchScriptTests {
+public class UpdaterScriptTests extends AbstractSearchScriptTests {
 
     @Test
     public void testSet() throws Exception {
@@ -36,7 +36,6 @@ public class ArrayHelperScriptTests extends AbstractSearchScriptTests {
         		.setSource(XContentFactory.jsonBuilder().startObject()
                     .field("name", "rec1")
                     .field("tags", new String[] {"elasticsearch", "wow"})
-//                    .field("tags", "wow")
                     .endObject()));
 
         indexRandom(true, indexBuilders);
