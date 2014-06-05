@@ -128,6 +128,8 @@ public class UpdaterScript  extends AbstractSearchScript {
 			for (Map<String,Object> subAction : actions) {
 				atLeastOneChange = execActions(subAction) || atLeastOneChange;
 			}
+		} else if (value instanceof Map && "doc".equals(action)) {
+			atLeastOneChange = executeDoc( (Map<String,Object>) value) || atLeastOneChange;
 		} else if (value instanceof Map) {
 			Map<String,Object> pathValues = (Map<String,Object>) value;
 			for (Entry<String,Object> entry : pathValues.entrySet()) {
@@ -140,10 +142,8 @@ public class UpdaterScript  extends AbstractSearchScript {
 					atLeastOneChange = execRemoveItems(path, getEntryValueAsList(entry)) || atLeastOneChange;
 				} else if ("set".equals(action)) {
 					atLeastOneChange = execSet(path, entry.getValue()) || atLeastOneChange;
-				} else if ("doc".equals(action)) {
-					atLeastOneChange = executeDoc( (Map<String,Object>) entry.getValue()) || atLeastOneChange;
 				} else {
-					// ??
+					System.err.println("Invalid operation.");
 				}
 			}
 		} else if (value instanceof List) {
@@ -152,6 +152,8 @@ public class UpdaterScript  extends AbstractSearchScript {
 					atLeastOneChange = execRemove((String)v) || atLeastOneChange;
 				}
 			}
+		} else if (value instanceof String && "remove".equals(action)) {
+			atLeastOneChange = execRemove((String)value) || atLeastOneChange;
 		}
 		return atLeastOneChange;
     }
