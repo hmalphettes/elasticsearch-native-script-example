@@ -22,11 +22,17 @@ import org.junit.Test;
 @ClusterScope(scope= Scope.SUITE, numDataNodes =1)
 public class UpdaterScriptTests extends AbstractSearchScriptTests {
 
-//	@Override
-//	public void setUp() throws Exception {
-//		super.setUp();
-//		
-//	}
+	private Integer idx;
+
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		idx = 0;
+	}
+	
+	private String getIndex() {
+		return "test" + idx;
+	}
 	private void prepareTest(XContentBuilder source) throws IOException, InterruptedException, ExecutionException {
 		// Create a new index
 		String mapping = XContentFactory.jsonBuilder()
@@ -38,11 +44,12 @@ public class UpdaterScriptTests extends AbstractSearchScriptTests {
 				.endObject()
 			.endObject()
 		.endObject().string();
-		
-		assertAcked(prepareCreate("test").addMapping("article", mapping));
+
+		idx++;
+		assertAcked(prepareCreate(getIndex()).addMapping("article", mapping));
 
 		List<IndexRequestBuilder> indexBuilders = new ArrayList<IndexRequestBuilder>();
-		indexBuilders.add(client().prepareIndex("test", "article", "1").setSource(source));
+		indexBuilders.add(client().prepareIndex(getIndex(), "article", "1").setSource(source));
 
 		indexRandom(true, indexBuilders);
 	}
@@ -79,7 +86,7 @@ public class UpdaterScriptTests extends AbstractSearchScriptTests {
 		vals.add("elasticsearch");
 		setParams.put("tags", vals);
 		List<Object> tags = updateAndGetTags("removeItems", setParams);
-		assertTrue(tags.size() == 2);
+		assertTrue(tags.size() == 1);
 	}
 	
 	/** "script": "updater", "lang": "native",
@@ -107,7 +114,7 @@ public class UpdaterScriptTests extends AbstractSearchScriptTests {
 	private ArrayList<Object> updateAndGetTags(String action, Object values) {
 		// Update using the script
 		
-		client().prepareUpdate("test", "article", "1")
+		client().prepareUpdate(getIndex(), "article", "1")
 				.setScript("updater").setScriptLang("native")
 //				.addScriptParam("action", "updater")
 //				.addScriptParam("source", "tags")
@@ -115,7 +122,7 @@ public class UpdaterScriptTests extends AbstractSearchScriptTests {
 				.get();
 		
 		// Retrieve record and check
-		GetResponse getResponse = client().prepareGet("test", "article", "1").get();
+		GetResponse getResponse = client().prepareGet(getIndex(), "article", "1").get();
 		
 		assertTrue(getResponse.isExists());
 
