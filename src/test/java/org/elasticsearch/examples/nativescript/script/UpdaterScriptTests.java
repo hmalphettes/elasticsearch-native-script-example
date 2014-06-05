@@ -5,15 +5,12 @@ import static org.elasticsearch.test.hamcrest.ElasticsearchAssertions.assertAcke
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.elasticsearch.action.ActionRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexRequestBuilder;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.test.ElasticsearchIntegrationTest.ClusterScope;
@@ -22,6 +19,7 @@ import org.junit.Test;
 
 /**
  */
+@SuppressWarnings("unchecked")
 @ClusterScope(scope= Scope.SUITE, numDataNodes =1)
 public class UpdaterScriptTests extends AbstractSearchScriptTests {
 
@@ -71,6 +69,7 @@ public class UpdaterScriptTests extends AbstractSearchScriptTests {
 		vals.add("elasticsearch");
 		vals.add("ok lah");
 		setParams.put("tags", vals);
+		
 		List<Object> tags = ((List<Object>) updateAndGetResponse("mergeItems", setParams).get("tags"));
 		assertTrue(tags.size() == 3);
 	}
